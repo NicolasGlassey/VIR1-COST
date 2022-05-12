@@ -1,0 +1,22 @@
+{
+  "name": "vir1-cost",
+  "version": "1.0.0",
+  "description": "VIR1-Costs team",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TGACPNV/VIR1-COST.git"
+  },
+  "author": "",
+  "license": "None",
+  "bugs": {
+    "url": "https://github.com/TGACPNV/VIR1-COST/issues"
+  },
+  "homepage": "https://github.com/TGACPNV/VIR1-COST#readme",
+  "dependencies": {
+    "jest": "^28.1.0"
+  }
+}
