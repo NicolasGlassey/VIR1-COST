@@ -38,8 +38,9 @@ module.exports = class Budget{
             }
         });
 
-        return this.client.send(command);
+        let res = await this.client.send(command);
 
+        return res.$metadata.httpStatusCode
 
     }
   }

@@ -11,9 +11,8 @@ const Budget = require("../Budget/Budget.js");
 test("Budget create", async () => {
     let expectedStatusCode = 200
 
-    let budget = new Budget("709024702237", "Budget de test3", 1, "USD", "DAILY");
-    let res = await budget.createBudget();
-    let actualStatusCode = res.$metadata.httpStatusCode
+    let budget = new Budget("709024702237", "Budget de test4", 1, "USD", "DAILY");
+    let actualStatusCode = await budget.createBudget();
 
     expect(actualStatusCode).toBe(expectedStatusCode);
 });
