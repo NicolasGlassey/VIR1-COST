@@ -1,4 +1,11 @@
-import { BudgetsClient, CreateBudgetCommand } from "@aws-sdk/client-budgets";
+/**
+ * @file Budget.js
+ * @author theo.gautier@cpnv.ch
+ */
+
+"use strict";
+//import { BudgetsClient, CreateBudgetCommand } from "@aws-sdk/client-budgets";
+const { BudgetsClient, CreateBudgetCommand} = require("@aws-sdk/client-budgets");
 
 /**
  * @typedef {Object} Budget
@@ -6,29 +13,33 @@ import { BudgetsClient, CreateBudgetCommand } from "@aws-sdk/client-budgets";
  *
  *
  */
-module.exports = class Budget {
-    constructor(AccountId, name, limitAmount, limitUnit, type, timeUnit) {
+module.exports = class Budget{
+    constructor(AccountId, name, limitAmount, limitUnit, timeUnit) {
         this.accountId = AccountId;
         this.name = name;
         this.limitAmount = limitAmount;
         this.limitUnit = limitUnit;
-        this.type = type;
         this.timeUnit = timeUnit;
         this.client = new BudgetsClient({region: "eu-west-3"});
     }
 
-    createBudget() {
+    async createBudget() {
+
         let command = new CreateBudgetCommand({
-            AccountId: this.accountId,
+            AccountId: ""+this.accountId,
             Budget: {
                 BudgetLimit: {
-                    Amount: this.limitAmount,
+                    Amount:  ""+this.limitAmount,
                     Unit: this.limitUnit
                 },
                 BudgetName: this.name,
-                BudgetType: this.type,
+                BudgetType: "COST",
                 TimeUnit: this.timeUnit
             }
         });
+
+        return this.client.send(command);
+
+
     }
   }
