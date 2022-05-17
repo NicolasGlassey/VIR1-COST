@@ -8,7 +8,7 @@
 
 const Budget = require("../Budget/Budget.js");
 
-test("Budget create", async () => {
+test("Budget_create_success", async () => {
     let expectedStatusCode = 200
 
     let budget = new Budget("709024702237", "Budget de test4", 1, "USD", "DAILY");
