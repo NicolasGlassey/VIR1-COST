@@ -17,3 +17,5 @@ After installing the dependencies, you can run the following command to install 
 To run the tests, you can run the following command:
 
 ```npm run test```
+
+**Attention: The tests do not clean up after themselves. You have to manually remove the tests budgets and reports.**
