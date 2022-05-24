@@ -14,6 +14,7 @@
   "name": "vir1-cost",
   "version": "1.0.0",
   "description": "VIR1-Costs team",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TGACPNV/VIR1-COST.git"
@@ -24,6 +25,8 @@
   },
   "homepage": "https://github.com/TGACPNV/VIR1-COST#readme",
   "dependencies": {
-    "@aws-sdk/client-budgets": "^3.87.0"
+    "@aws-sdk/client-budgets": "^3.87.0",
+    "@aws-sdk/client-cost-and-usage-report-service": "^3.92.0",
+    "jest": "^28.1.0"
   }
 }
