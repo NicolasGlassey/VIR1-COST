@@ -10,6 +10,7 @@ VIR1-Costs team
 
 ## Installation
 After installing the dependencies, you can run the following command to install node modules:
+//TODO NGY - which dependencies ?
 
 ```npm install```
 
