@@ -40,6 +40,11 @@ module.exports = class BudgetHelper{
         this.#accountId = accountId;
     }
 
+    /**
+     * Check if budget exists
+     * @param name Budget name
+     * @returns {Promise<boolean>}
+     */
     async exists(name) {
         let command = new DescribeBudgetCommand({
             AccountId: "" + this.#accountId,
@@ -90,6 +95,11 @@ module.exports = class BudgetHelper{
         }
     }
 
+    /**
+     * Used to delete a budget
+     * @param name Budget's name
+     * @returns {Promise<boolean>}
+     */
     async delete(name){
         let command = new DeleteBudgetCommand({
             AccountId: "" + this.#accountId,
@@ -108,6 +118,10 @@ module.exports = class BudgetHelper{
         }
     }
 
+    /**
+     * To convert amazon exceptions to our exceptions
+     * @param exception
+     */
     #exceptionHandler(exception) {
         switch (true){
             case exception instanceof AwsAccessDeniedException:
