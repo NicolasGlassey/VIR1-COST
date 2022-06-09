@@ -6,25 +6,27 @@
  */
 "use strict";
 
-const Budget = require("../Budget/Budget.js");
-let budget = null;
+const BudgetHelper = require("../Budget/BudgetHelper.js");
+let budgetHelper = null;
 let budgetName = "";
+let accountId = "";
+let budgetLimitAmount;
+
 
 beforeEach(() => {
-    budget = new Budget();
-    budgetName = "myBudgetName";
+    budgetHelper = new BudgetHelper("709024702237");
+    budgetName = "unitTestsBudget";
 });
 
-test("exists_NominalCase_Success", async () => {
-    //given
-    //refer to beforeEach
-
-    //when
-    //event is called directly by the assertion
-
-    //then
-    expect(budget.exists(budgetName)).toBe(true);
-});
+afterEach(async ()=>{
+    try{
+        await budgetHelper.delete(budgetName);
+    }catch (exception){
+        if(!(exception instanceof BudgetNotFoundException)){
+            throw exception;
+        }
+    }
+})
 
 test("exists_BudgetNotExist_Success", async () => {
     //given
@@ -34,20 +36,32 @@ test("exists_BudgetNotExist_Success", async () => {
     //event is called directly by the assertion
 
     //then
-    expect(budget.exists(budgetName)).toBe(false);
+    expect(await budgetHelper.exists(budgetName)).toBe(false);
 });
 
 test("create_NominalCase_Success", async () => {
     //given
     //refer to before each
-    let actualResult = "";
-    expect(budget.exists(budgetName)).toBe(false);
+
+
+    expect(await budgetHelper.exists(budgetName)).toBe(false);
 
     //when
-    await budget.create("709024702237", "test2", 1, "USD", "DAILY");
+    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
 
     //then
-    expect(budget.exists(budgetName)).toBe(true);
+    expect(await budgetHelper.exists(budgetName)).toBe(true);
+});
+
+test("exists_NominalCase_Success", async () => {
+    //given
+    //refer to beforeEach
+    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
+    //when
+    //event is called directly by the assertion
+
+    //then
+    expect(await budgetHelper.exists(budgetName)).toBe(true);
 });
 
 test("create_AlreadyExist_ThrowException", async () => {
@@ -55,7 +69,7 @@ test("create_AlreadyExist_ThrowException", async () => {
     //refer to before each
 
     //when
-    expect(() => await budget.create("709024702237", budgetName, 1, "USD", "DAILY").toThrow(BudgetAlreadyExistException);
+    expect(async () => await budget.create(budgetName, 1, "USD", "DAILY").toThrow(BudgetAlreadyExistException));
 
     //then
     //Exception is thrown
@@ -65,14 +79,14 @@ test("delete_NominalCase_Success", async () => {
     //given
     //refer to before each
     let actualResult = "";
-    await budget.create("709024702237", "test2", 1, "USD", "DAILY");
-    expect(budget.exists(budgetName)).toBe(true);
+    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
+    expect(await budgetHelper.exists(budgetName)).toBe(true);
 
     //when
-    await budget.delete(budgetName);
+    await budgetHelper.delete(budgetName);
 
     //then
-    expect(budget.exists(budgetName)).toBe(false);
+    expect(await budgetHelper.exists(budgetName)).toBe(false);
 });
 
 test("delete_BudgetNotFound_ThrowException", async () => {
@@ -81,7 +95,7 @@ test("delete_BudgetNotFound_ThrowException", async () => {
     budgetName += "NotExist";
 
     //when
-    expect(() => await budget.create("709024702237", budgetName, 1, "USD", "DAILY").toThrow(BudgetNotFoundException);
+    expect(async () => await budgetHelper.delete(budgetName, 1, "USD", "DAILY").toThrow(BudgetNotFoundException));
 
     //then
     //Exception is thrown

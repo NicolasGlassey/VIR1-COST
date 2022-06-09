@@ -16,7 +16,7 @@ After installing the node dependencies, you can run the following command to ins
 ## Usage
 ### Budget
 ```javascript
-const Budget = require("../Budget/Budget.js");
+const Budget = require("../Budget/BudgetHelper.js");
 budget = new Budget();
 
 //create a new budget

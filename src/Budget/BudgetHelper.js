@@ -1,5 +1,5 @@
 /**
- * @file Budget.js
+ * @file BudgetHelper.js
  * @author theo.gautier@cpnv.ch
  */
 
@@ -8,11 +8,13 @@
 const { BudgetsClient,
         CreateBudgetCommand,
         DescribeBudgetCommand,
+        DeleteBudgetCommand,
         AccessDeniedException: AwsAccessDeniedException,
         CreationLimitExceededException: AwsCreationLimitExceededException,
         DuplicateRecordException: AwsDuplicateRecordException,
         InternalErrorException: AwsInternalErrorException,
         InvalidParameterException: AwsInvalidParameterException,
+        NotFoundException: AwsNotFoundException
         } = require("@aws-sdk/client-budgets");
 
 const AccessDeniedException = require("./AccessDeniedException.js")
@@ -20,6 +22,7 @@ const CreationLimitExceededException = require("./CreationLimitExceededException
 const DuplicateRecordException = require("./DuplicateRecordException.js")
 const InternalErrorException = require("./InternalErrorException.js")
 const InvalidParameterException = require("./InvalidParameterException.js")
+const Console = require("console");
 
 
 /**
@@ -28,21 +31,30 @@ const InvalidParameterException = require("./InvalidParameterException.js")
  *
  *
  */
-module.exports = class Budget{
+module.exports = class BudgetHelper{
 
     #client = new BudgetsClient({region: "eu-west-3"});
+    #accountId = null;
 
-    async exists(accountId, name) {
+    constructor(accountId) {
+        this.#accountId = accountId;
+    }
+
+    async exists(name) {
         let command = new DescribeBudgetCommand({
-            AccountId: "" + accountId,
+            AccountId: "" + this.#accountId,
             BudgetName: name
         });
 
         try {
             let res = await this.#client.send(command);
-            return res;
+            return (res.$metadata.httpStatusCode === 200);
         }catch (exception){
-            this.exceptionHandler(exception);
+            if(exception instanceof AwsNotFoundException){
+                return false;
+            }else {
+                this.#exceptionHandler(exception);
+            }
         }
     }
 
@@ -55,14 +67,14 @@ module.exports = class Budget{
      * @param timeUnit
      * @returns {Promise<boolean>}
      */
-    async create(accountId, name, limitAmount, limitUnit, timeUnit) {
+    async create(name, limitAmount, limitUnit, timeUnit) {
         let res;
         let command = new CreateBudgetCommand({
-            AccountId: "" + accountId,
+            AccountId: "" + this.#accountId,
             Budget: {
                 BudgetLimit: {
                     Amount:  "" + limitAmount,
-                    Unit: limitUnit
+                    Unit: ""+limitUnit
                 },
                 BudgetName: name,
                 BudgetType: "COST",
@@ -72,9 +84,27 @@ module.exports = class Budget{
 
         try {
             res = await this.#client.send(command);
-            return res.$metadata.httpStatusCode === 200;
+            return (res.$metadata.httpStatusCode === 200);
         }catch (exception){
             this.#exceptionHandler(exception);
+        }
+    }
+
+    async delete(name){
+        let command = new DeleteBudgetCommand({
+            AccountId: "" + this.#accountId,
+            BudgetName: name
+        });
+
+        try {
+            let res = await this.#client.send(command);
+            return (res.$metadata.httpStatusCode === 200);
+        }catch (exception){
+            if(exception instanceof AwsNotFoundException){
+                return false;
+            }else {
+                this.#exceptionHandler(exception);
+            }
         }
     }
 
