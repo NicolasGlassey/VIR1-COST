@@ -46,7 +46,16 @@ module.exports = class Budget{
         }
     }
 
-    async createBudget(accountId, name, limitAmount, limitUnit, timeUnit) {
+    /**
+     * Used to create a budget
+     * @param accountId
+     * @param name
+     * @param limitAmount
+     * @param limitUnit
+     * @param timeUnit
+     * @returns {Promise<boolean>}
+     */
+    async create(accountId, name, limitAmount, limitUnit, timeUnit) {
         let res;
         let command = new CreateBudgetCommand({
             AccountId: "" + accountId,
