@@ -1,6 +1,6 @@
 /**
  * @File budget.test.js
- * @breif Test the budget module
+ * @brief Test the budget module
  * @author Theo.gauier@cpnv.ch
  * @version 15.05.2022
  */
@@ -9,9 +9,6 @@
 const BudgetHelper = require("../Budget/BudgetHelper.js");
 let budgetHelper = null;
 let budgetName = "";
-let accountId = "";
-let budgetLimitAmount;
-
 
 beforeEach(() => {
     budgetHelper = new BudgetHelper("709024702237");
@@ -19,6 +16,7 @@ beforeEach(() => {
 });
 
 afterEach(async ()=>{
+    //TODO NGY - do not use try and catch in a test class. Prefer to check (condition) before trying to delete (exists)
     try{
         await budgetHelper.delete(budgetName);
     }catch (exception){
@@ -27,6 +25,17 @@ afterEach(async ()=>{
         }
     }
 })
+
+test("exists_NominalCase_Success", async () => {
+    //given
+    //refer to beforeEach
+    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
+    //when
+    //event is called directly by the assertion
+
+    //then
+    expect(await budgetHelper.exists(budgetName)).toBe(true);
+});
 
 test("exists_BudgetNotExist_Success", async () => {
     //given
@@ -42,23 +51,10 @@ test("exists_BudgetNotExist_Success", async () => {
 test("create_NominalCase_Success", async () => {
     //given
     //refer to before each
-
-
     expect(await budgetHelper.exists(budgetName)).toBe(false);
 
     //when
     await budgetHelper.create(budgetName, 1, "USD", "DAILY");
-
-    //then
-    expect(await budgetHelper.exists(budgetName)).toBe(true);
-});
-
-test("exists_NominalCase_Success", async () => {
-    //given
-    //refer to beforeEach
-    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
-    //when
-    //event is called directly by the assertion
 
     //then
     expect(await budgetHelper.exists(budgetName)).toBe(true);
@@ -69,6 +65,8 @@ test("create_AlreadyExist_ThrowException", async () => {
     //refer to before each
 
     //when
+    let budget;
+    //TODO - NGY - please review the way you are using exception import
     expect(async () => await budget.create(budgetName, 1, "USD", "DAILY").toThrow(BudgetAlreadyExistException));
 
     //then
