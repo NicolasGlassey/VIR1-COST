@@ -69,7 +69,7 @@ module.exports = class BudgetHelper{
      * @param name - The name of the budget, should be unique.
      * @param limitAmount - The budget limit.
      * @param limitUnit - The currency code, "USD" for exemple.
-     * @param timeUnit - The budget timespan. DAILY, MONTHLY, QUARTERLY, or ANNUALLY.
+     * @param timeUnit - The budget period. DAILY, MONTHLY, QUARTERLY, or ANNUALLY.
      * @returns {Promise<boolean>}
      */
     async create(name, limitAmount, limitUnit, timeUnit) {
