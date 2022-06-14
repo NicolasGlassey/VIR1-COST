@@ -33,11 +33,12 @@ const Console = require("console");
  */
 module.exports = class BudgetHelper{
 
-    #client = new BudgetsClient({region: "eu-west-3"});
+    #client = null;
     #accountId = null;
 
-    constructor(accountId) {
+    constructor(accountId, region) {
         this.#accountId = accountId;
+        this.#client = new BudgetsClient({region: region});
     }
 
     /**
@@ -53,6 +54,7 @@ module.exports = class BudgetHelper{
 
         try {
             let res = await this.#client.send(command);
+            //TODO NGY - use only sdk error object (no https status code)
             return (res.$metadata.httpStatusCode === 200);
         }catch (exception){
             if(exception instanceof AwsNotFoundException){
@@ -89,6 +91,7 @@ module.exports = class BudgetHelper{
 
         try {
             res = await this.#client.send(command);
+            //TODO NGY - use only sdk error object (no https status code)
             return (res.$metadata.httpStatusCode === 200);
         }catch (exception){
             this.#exceptionHandler(exception);
@@ -108,6 +111,7 @@ module.exports = class BudgetHelper{
 
         try {
             let res = await this.#client.send(command);
+            //TODO NGY - use only sdk error object (no https status code)
             return (res.$metadata.httpStatusCode === 200);
         }catch (exception){
             if(exception instanceof AwsNotFoundException){
