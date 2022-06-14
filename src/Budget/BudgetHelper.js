@@ -65,11 +65,11 @@ module.exports = class BudgetHelper{
 
     /**
      * Used to create a budget
-     * @param accountId
-     * @param name
-     * @param limitAmount
-     * @param limitUnit
-     * @param timeUnit
+     * @param accountId - The ID of the AWS account.
+     * @param name - The name f the budget, should be unique.
+     * @param limitAmount - The budget limit.
+     * @param limitUnit - The currency code, "USD" for exemple.
+     * @param timeUnit - The budget timespan. DAILY, MONTHLY, QUARTERLY, or ANNUALLY.
      * @returns {Promise<boolean>}
      */
     async create(name, limitAmount, limitUnit, timeUnit) {

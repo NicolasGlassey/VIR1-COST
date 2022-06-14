@@ -28,6 +28,8 @@ budget.exists("[ACCOUNT_ID]", "myBudget");
 //delete a budget
     // Not implemented yet
 ```
+
+Budget methods are asynchronous.
 ## Testing
 To run the tests, you can run the following command:
 
