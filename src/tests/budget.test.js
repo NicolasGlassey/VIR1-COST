@@ -7,6 +7,9 @@
 "use strict";
 
 const BudgetHelper = require("../Budget/BudgetHelper.js");
+const DuplicateRecordException = require("../Budget/DuplicateRecordException.js");
+const NotFoundException = require("../Budget/NotFoundException.js")
+
 let budgetHelper = null;
 let budgetName = "";
 
@@ -14,17 +17,6 @@ beforeEach(() => {
     budgetHelper = new BudgetHelper("709024702237");
     budgetName = "unitTestsBudget";
 });
-
-afterEach(async ()=>{
-    //TODO NGY - do not use try and catch in a test class. Prefer to check (condition) before trying to delete (exists)
-    try{
-        await budgetHelper.delete(budgetName);
-    }catch (exception){
-        if(!(exception instanceof BudgetNotFoundException)){
-            throw exception;
-        }
-    }
-})
 
 test("exists_NominalCase_Success", async () => {
     //given
@@ -66,8 +58,8 @@ test("create_AlreadyExist_ThrowException", async () => {
 
     //when
     let budget;
-    //TODO - NGY - please review the way you are using exception import
-    expect(async () => await budget.create(budgetName, 1, "USD", "DAILY").toThrow(BudgetAlreadyExistException));
+
+    expect(async () => await budget.create(budgetName, 1, "USD", "DAILY").toThrow(DuplicateRecordException));
 
     //then
     //Exception is thrown
@@ -93,10 +85,14 @@ test("delete_BudgetNotFound_ThrowException", async () => {
     budgetName += "NotExist";
 
     //when
-    expect(async () => await budgetHelper.delete(budgetName, 1, "USD", "DAILY").toThrow(BudgetNotFoundException));
+    expect(async () => await budgetHelper.delete(budgetName, 1, "USD", "DAILY").toThrow(NotFoundException));
 
     //then
     //Exception is thrown
 });
 
-//TODO NGY add after all method
+afterEach(async ()=>{
+    if(await budgetHelper.exists(budgetName)) {
+        await budgetHelper.delete(budgetName);
+    }
+})

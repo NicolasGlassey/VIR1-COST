@@ -1,0 +1,1 @@
+module.exports = class NotFoundException extends Error {}
