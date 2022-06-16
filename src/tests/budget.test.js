@@ -1,32 +1,33 @@
 /**
  * @File budget.test.js
- * @breif Test the budget module
+ * @brief Test the budget module
  * @author Theo.gauier@cpnv.ch
  * @version 15.05.2022
  */
 "use strict";
 
 const BudgetHelper = require("../Budget/BudgetHelper.js");
+const DuplicateRecordException = require("../Budget/DuplicateRecordException.js");
+const NotFoundException = require("../Budget/NotFoundException.js")
+
 let budgetHelper = null;
 let budgetName = "";
-let accountId = "";
-let budgetLimitAmount;
-
 
 beforeEach(() => {
     budgetHelper = new BudgetHelper("709024702237");
     budgetName = "unitTestsBudget";
 });
 
-afterEach(async ()=>{
-    try{
-        await budgetHelper.delete(budgetName);
-    }catch (exception){
-        if(!(exception instanceof BudgetNotFoundException)){
-            throw exception;
-        }
-    }
-})
+test("exists_NominalCase_Success", async () => {
+    //given
+    //refer to beforeEach
+    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
+    //when
+    //event is called directly by the assertion
+
+    //then
+    expect(await budgetHelper.exists(budgetName)).toBe(true);
+});
 
 test("exists_BudgetNotExist_Success", async () => {
     //given
@@ -42,23 +43,10 @@ test("exists_BudgetNotExist_Success", async () => {
 test("create_NominalCase_Success", async () => {
     //given
     //refer to before each
-
-
     expect(await budgetHelper.exists(budgetName)).toBe(false);
 
     //when
     await budgetHelper.create(budgetName, 1, "USD", "DAILY");
-
-    //then
-    expect(await budgetHelper.exists(budgetName)).toBe(true);
-});
-
-test("exists_NominalCase_Success", async () => {
-    //given
-    //refer to beforeEach
-    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
-    //when
-    //event is called directly by the assertion
 
     //then
     expect(await budgetHelper.exists(budgetName)).toBe(true);
@@ -69,7 +57,9 @@ test("create_AlreadyExist_ThrowException", async () => {
     //refer to before each
 
     //when
-    expect(async () => await budget.create(budgetName, 1, "USD", "DAILY").toThrow(BudgetAlreadyExistException));
+    let budget;
+
+    expect(async () => await budget.create(budgetName, 1, "USD", "DAILY").toThrow(DuplicateRecordException));
 
     //then
     //Exception is thrown
@@ -95,10 +85,14 @@ test("delete_BudgetNotFound_ThrowException", async () => {
     budgetName += "NotExist";
 
     //when
-    expect(async () => await budgetHelper.delete(budgetName, 1, "USD", "DAILY").toThrow(BudgetNotFoundException));
+    expect(async () => await budgetHelper.delete(budgetName, 1, "USD", "DAILY").toThrow(NotFoundException));
 
     //then
     //Exception is thrown
 });
 
-//TODO NGY add after all method
+afterEach(async ()=>{
+    if(await budgetHelper.exists(budgetName)) {
+        await budgetHelper.delete(budgetName);
+    }
+})

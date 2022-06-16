@@ -22,7 +22,7 @@ const CreationLimitExceededException = require("./CreationLimitExceededException
 const DuplicateRecordException = require("./DuplicateRecordException.js")
 const InternalErrorException = require("./InternalErrorException.js")
 const InvalidParameterException = require("./InvalidParameterException.js")
-const Console = require("console");
+const NotFoundException = require("./NotFoundException.js")
 
 
 /**
@@ -33,11 +33,12 @@ const Console = require("console");
  */
 module.exports = class BudgetHelper{
 
-    #client = new BudgetsClient({region: "eu-west-3"});
+    #client = null;
     #accountId = null;
 
-    constructor(accountId) {
+    constructor(accountId, region) {
         this.#accountId = accountId;
+        this.#client = new BudgetsClient({region: region});
     }
 
     /**
@@ -52,8 +53,8 @@ module.exports = class BudgetHelper{
         });
 
         try {
-            let res = await this.#client.send(command);
-            return (res.$metadata.httpStatusCode === 200);
+            await this.#client.send(command);
+            return true;
         }catch (exception){
             if(exception instanceof AwsNotFoundException){
                 return false;
@@ -73,7 +74,6 @@ module.exports = class BudgetHelper{
      * @returns {Promise<boolean>}
      */
     async create(name, limitAmount, limitUnit, timeUnit) {
-        let res;
         let command = new CreateBudgetCommand({
             AccountId: "" + this.#accountId,
             Budget: {
@@ -88,8 +88,8 @@ module.exports = class BudgetHelper{
         });
 
         try {
-            res = await this.#client.send(command);
-            return (res.$metadata.httpStatusCode === 200);
+            await this.#client.send(command);
+            return true;
         }catch (exception){
             this.#exceptionHandler(exception);
         }
@@ -107,8 +107,8 @@ module.exports = class BudgetHelper{
         });
 
         try {
-            let res = await this.#client.send(command);
-            return (res.$metadata.httpStatusCode === 200);
+            await this.#client.send(command);
+            return true;
         }catch (exception){
             if(exception instanceof AwsNotFoundException){
                 return false;
@@ -134,6 +134,8 @@ module.exports = class BudgetHelper{
                 throw new InternalErrorException("Internal error");
             case exception instanceof AwsInvalidParameterException:
                 throw new InvalidParameterException(exception.message);
+            case exception instanceof AwsNotFoundException:
+                throw new NotFoundException();
             default:
                 throw new InternalErrorException("Undefined internal error");
         }
