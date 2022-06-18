@@ -5,29 +5,44 @@
  */
 
 "use strict";
-const { BudgetsClient,
-        CreateNotificationCommand,
-        DescribeNotificationsForBudgetCommand,
-        DuplicateRecordException: AwsDuplicateRecordException,
-        InternalErrorException: AwsInternalErrorException
-        } = require("@aws-sdk/client-budgets");
-        
-const DuplicateRecordException = require("./DuplicateRecordException.js")
-const InvalidParameterException = require("./InvalidParameterException.js")
-const InternalErrorException = require("./InternalErrorException.js")
+const {
+    BudgetsClient,
+    CreateNotificationCommand,
+    DescribeNotificationsForBudgetCommand
+} = require("@aws-sdk/client-budgets");
 /**
  * @typedef {Object} Alerts
  * @attribute {string} name
  *
  *
  */
-module.exports = class Alerts{
+module.exports = class Alerts {
+    #client = null;
+    #accountId = null;
 
-    #client = new BudgetsClient({region: "eu-west-3"});
+    constructor(accountId, region) {
+        this.#accountId = accountId;
+        this.#client = new BudgetsClient({
+            region: region
+        });
+    }
 
-    async create(accountId, budgetName, limitAmount, Subscribers) {
-        let command = new CreateNotificationCommand({
-            AccountId: accountId,
+    async exists(budgetName, limitAmount) {
+        let command = new DescribeNotificationsForBudgetCommand({
+            AccountId: this.#accountId,
+            BudgetName: budgetName
+        });
+
+        try {
+            const res = await this.#client.send(command);
+            return await res.Notifications.some(notification => notification.Threshold == limitAmount);
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    async create(budgetName, limitAmount, subscribers) {
+        let input = {AccountId: this.#accountId,
             BudgetName: budgetName,
             Notification: {
                 ComparisonOperator: "GREATER_THAN",
@@ -35,34 +50,21 @@ module.exports = class Alerts{
                 Threshold: limitAmount,
                 ThresholdType: "PERCENTAGE"
             },
-            Subscribers: [
-                {
-                    Address: "maurx18@gmail.com",
-                    SubscriptionType: "EMAIL"
-                }
-            ]
-            
+            Subscribers: []
+        }
+        
+        subscribers.forEach(subscriber => {
+            let values = {
+                Address: subscriber,
+                SubscriptionType: "EMAIL"
+            };
+            input.Subscribers.push(values);
         });
-        await this.#client.send(command).catch((err)=>{
-            this.exceptionHandler(err);
-        });
-    }
-    async exists(accountId, budgetName,limitAmount) {
-        let command = new DescribeNotificationsForBudgetCommand({
-            AccountId: accountId,
-            BudgetName: budgetName
-        });
-        const res = await this.#client.send(command).catch((err)=>{
-            exceptionHandler(err);
-        });
-        return await res.Notifications.some(notification =>notification.Threshold==limitAmount);
-    }
-    exceptionHandler(exception) {
-        switch (true){
-            case exception instanceof AwsDuplicateRecordException:
-                throw new DuplicateRecordException(exception.message);
-            default:
-                throw new InternalErrorException("Undefined internal error");
+        let command = new CreateNotificationCommand(input);
+        try {
+            await this.#client.send(command);
+        } catch (error) {
+            throw new Error(error.message);
         }
     }
 }

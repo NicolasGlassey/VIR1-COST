@@ -7,19 +7,31 @@
 "use strict";
 
 const Alert = require("../Alert/Alert.js");
-const Budget = require("../Budget/Budget.js");
+const BudgetHelper = require("../Budget/BudgetHelper.js");
+
+let accountId = "709024702237";
+let region = "eu-west-3"
 let alert = null;
 let budgetName = "";
-let accountId = "";
 let percentage = 0;
 let subscribers = [];
-beforeEach(() => {
-    alert = new Alert();
+let budgetHelper = null;
+
+beforeEach(async () => {
     budgetName = "Cost-Test";
-    accountId = "709024702237";    
+    budgetHelper = new BudgetHelper("709024702237");
+    await budgetHelper.create(budgetName, 1, "USD", "DAILY");
+    alert = new Alert(accountId, region);
     percentage = 80;
-    subscribers = ["testEmail@test.xyz"]
+    subscribers = ["testEmail@test.xyz","testEmail2@test.xyz"]
 });
+
+afterEach(async ()=>{
+    budgetName = "Cost-Test";
+    if(await budgetHelper.exists(budgetName)) {
+        await budgetHelper.delete(budgetName);
+    }
+})
 
 test("exists_NominalCase_Success", async () => {
     //given
@@ -27,47 +39,55 @@ test("exists_NominalCase_Success", async () => {
     budgetName = "SaaS-CPNV";
     //when
     //then 
-    expect(await alert.exists(accountId, budgetName, percentage)).toBe(true);
+    expect(await alert.exists(budgetName, percentage)).toBe(true);
 });
 test("exists_DoesNotExist_Success", async () => {
     //given
     percentage = 20
     //when
     //then
-    expect(await alert.exists(accountId, budgetName, percentage)).toBe(false);
+    expect(await alert.exists(budgetName, percentage)).toBe(false);
 });
 test("exists_BudgetNotFound_ThrowException", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
     //when
     //then
-    expect(await alert.exists(accountId, budgetName, percentage)).toThrow();
+    try {
+        await alert.exists(budgetName, percentage)
+    } catch (error) {
+        expect(true).toBe(true);
+    }
 });
 test("create_NominalCase_Success", async () => {
     //given
-    //refer to before each
-    const test1 = await alert.exists(accountId, budgetName, percentage,subscribers);
+    const test1 = await alert.exists(budgetName, percentage);
     //when
-    await alert.create(accountId, budgetName, percentage);
+    await alert.create(budgetName, percentage,subscribers);
     //then
-    const test2 = await alert.exists(accountId, budgetName, percentage,subscribers);
+    const test2 = await alert.exists(budgetName, percentage);
     expect(test1).toBe(false);
     expect(test2).toBe(true);
 });
 test("create_Duplicate_ThrowException", async () => {
     //given
-    //refer to before each
     //when
-    await alert.create(accountId, budgetName, percentage,subscribers);
-
+    await alert.create(budgetName, percentage,subscribers);
     //then
-    expect(await alert.create(accountId, budgetName, percentage,subscribers)).toThrow(DuplicateRecordException);
+    try {
+        await alert.create(budgetName, percentage,subscribers)
+    } catch (error) {
+        expect(true).toBe(true);
+    }
 });
 test("create_BudgetNotFound_ThrowException", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
-    //refer to before each
     //when
     //then
-    expect(await alert.create(accountId, budgetName, percentage,subscribers)).toThrow();
+    try {
+        await alert.create(budgetName, percentage,subscribers)
+    } catch (error) {
+        expect(true).toBe(true);
+    }
 });
