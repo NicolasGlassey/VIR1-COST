@@ -10,6 +10,9 @@ const {
     CreateNotificationCommand,
     DescribeNotificationsForBudgetCommand
 } = require("@aws-sdk/client-budgets");
+
+const AccessDeniedException = require("../ExceptionHandler/exceptions/AccessDeniedException.js")
+
 /**
  * @typedef {Object} Alerts
  * @attribute {string} name
