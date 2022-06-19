@@ -1,32 +1,53 @@
 # VIR1-COST
-VIR1-Costs is a javascript library for creating and managing cost objects.
+## About the project
+VIR1-Costs is a set of classes to create and manage costs objects using the AWS SDK.
 
-## Installation
-### Requirements
+### Built With
+
+* [NodeJS](https://nodejs.org)
+* [AWS NodeJS SDK](https://aws.amazon.com/fr/sdk-for-javascript)
+* [Jest](https://jestjs.io)
+
+## Getting Started
+###  Prerequisites
+#### Packages / Programs
+Before cloning this project, make sure you have the following packages/programs installed on your system:
+
 | **Name** | **Version** |
 |----------|-------------|
-| NPM      | \>= v8.3.0  |
-| Node.js  | \>= v18.1.0 |
+| [Npm](https://www.npmjs.com)      | \>= v8.3.0  |
+| [NodeJS](https://nodejs.org)  | \>= v18.1.0 |
 
-### node modules
-After installing the node dependencies, you can run the following command to install node modules:
+#### AWS credentials
+Before you clone this repository, [setup your AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) so our classes can connect to the AWS servers.
 
-```npm install```
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone git@github.com:TGACPNV/VIR1-COST.git
+   cd VIR1-COST
+   ```
+
+2. Install npm dependencies
+    ```sh
+    npm install --dev
+    ```
 
 ## Usage
 ### Budget
 ```javascript
-const Budget = require("../Budget/BudgetHelper.js");
-budget = new Budget();
+const Budget = require("Budget/BudgetHelper.js");
+budget = new Budget("[ACCOUNT_ID]");
 
 //create a new budget
-budget.create("[ACCOUNT_ID]", "myBudget", 1, "USD", "DAILY");
+budget.create("myBudget", 1, "USD", "DAILY");
 
 //check if exists
-budget.exists("[ACCOUNT_ID]", "myBudget");
+budget.exists("myBudget");
 
 //delete a budget
-    // Not implemented yet
+budget.delete("myBudget");
 ```
 
 Budget methods are asynchronous.
