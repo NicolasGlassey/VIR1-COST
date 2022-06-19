@@ -19,6 +19,7 @@ module.exports = class CostReport {
         Granularity: "DAILY",
         Metrics: ["BlendedCost","UsageQuantity"]
 
+
       });
       const data = await client.send(command).then(
         (data) =>{
