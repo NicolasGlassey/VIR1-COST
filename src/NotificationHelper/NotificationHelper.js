@@ -27,6 +27,8 @@ module.exports = class NotificationHelper {
      */
     #client = null;
 
+    #budgetHelper = null;
+
     /**
      * The account id needed to fetch aws information.
      * @type {string}
@@ -35,6 +37,8 @@ module.exports = class NotificationHelper {
     #accountId = null;
 
     #exceptionHandler = null;
+
+
 
     /** 
      * @constructor
@@ -47,6 +51,8 @@ module.exports = class NotificationHelper {
         this.#client = new BudgetsClient({
             region: region
         });
+
+        this.#budgetHelper = new BudgetHelper(this.#accountId);
 
         this.#exceptionHandler = new ExceptionHandler();
     }
@@ -62,8 +68,8 @@ module.exports = class NotificationHelper {
             AccountId: this.#accountId,
             BudgetName: budgetName
         });
-        let budgetHelper = new BudgetHelper(this.#accountId);
-        if(! await budgetHelper.exists(budgetName))return false;
+
+        if(! await this.#budgetHelper.exists(budgetName))return false;
         try {
             const res = await this.#client.send(command);
             return await res.Notifications.some(notification => notification.Threshold == limitAmount);
