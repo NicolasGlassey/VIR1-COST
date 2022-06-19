@@ -20,16 +20,39 @@ const AccessDeniedException = require("../ExceptionHandler/exceptions/AccessDeni
  *
  */
 module.exports = class Alerts {
+    /**
+     * The aws client used to communicate with the aws api
+     * @type {BudgetsClient}
+     * @private
+     */
     #client = null;
+
+    /**
+     * The account id needed to fetch aws information.
+     * @type {string}
+     * @private
+     */
     #accountId = null;
 
+    /** 
+     * @constructor
+     * @param {string} accountId - The ID of the AWS account.
+     * @param {string} region - The AWS region to connect to.
+     * 
+     */
     constructor(accountId, region) {
         this.#accountId = accountId;
         this.#client = new BudgetsClient({
             region: region
         });
     }
-
+    /**
+     * Check if alert exists
+     * @async
+     * @param {string} budgetName Budget name
+     * @param {string} limitAmount budget pourcentage threshold
+     * @returns {Promise<boolean>}
+     */
     async exists(budgetName, limitAmount) {
         let command = new DescribeNotificationsForBudgetCommand({
             AccountId: this.#accountId,
@@ -43,7 +66,14 @@ module.exports = class Alerts {
             throw new Error(error.message);
         }
     }
-
+    /**
+     * Creates an alert
+     * @async
+     * @param {string} budgetName Budget name
+     * @param {string} limitAmount budget pourcentage threshold
+     * @param {string[]} subscribers list of emails that will be subscribed to the alert
+     * @returns {Promise<null>}
+     */
     async create(budgetName, limitAmount, subscribers) {
         let input = {AccountId: this.#accountId,
             BudgetName: budgetName,
