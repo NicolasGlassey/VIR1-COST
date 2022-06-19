@@ -35,8 +35,6 @@ To run the tests, you can run the following command:
 
 ```npm run test```
 
-**Attention: The tests do not clean up after themselves. You have to manually remove the tests budgets and reports.**
-
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
