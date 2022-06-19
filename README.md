@@ -35,7 +35,7 @@ Before you clone this repository, [setup your AWS credentials](https://docs.aws.
     ```
 
 ## Usage
-### Budget
+### BudgetHelper
 ```javascript
 const Budget = require("Budget/BudgetHelper.js");
 budget = new Budget("[ACCOUNT_ID]");
@@ -45,12 +45,22 @@ budget.create("myBudget", 1, "USD", "DAILY");
 
 //check if exists
 budget.exists("myBudget");
-
+1
 //delete a budget
 budget.delete("myBudget");
 ```
+### NotificationHelper
+```javascript
+const NotificationHelper = require("Notification/NotificationHelper.js");
+notificationHelper = new NotificationHelper("[ACCOUNT_ID]","[region]");
 
-Budget methods are asynchronous.
+//check if notification exists
+notificationHelper.exists("[budgetName]","[limitAmount]");
+
+//create a new notification
+notificationHelper.create("[budgetName]","[limitAmount]","[subcribers]");;
+```
+BudgetHelper and NotificationHelper methods are asynchronous.
 ## Testing
 To run the tests, you can run the following command:
 
