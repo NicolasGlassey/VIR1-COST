@@ -1,5 +1,5 @@
 /**
- * @file Alert.js
+ * @file NotificationHelper.js
  * @author Mauro-Alexandre.costa-dos-santos@cpnv.
  * @version 18.06.2022
  */
@@ -10,16 +10,16 @@ const {
     CreateNotificationCommand,
     DescribeNotificationsForBudgetCommand
 } = require("@aws-sdk/client-budgets");
-const BudgetHelper = require ("../Budget/BudgetHelper.js");
+const BudgetHelper = require ("../BudgetHelper/BudgetHelper.js");
 const ExceptionHandler = require("../ExceptionHandler/ExceptionHandler.js");
 
 /**
- * @typedef {Object} Alerts
+ * @typedef {Object} NotificationHelper
  * @attribute {string} name
  *
  *
  */
-module.exports = class Alerts {
+module.exports = class NotificationHelper {
     /**
      * The aws client used to communicate with the aws api
      * @type {BudgetsClient}
@@ -53,7 +53,7 @@ module.exports = class Alerts {
     /**
      * Check if alert exists
      * @async
-     * @param {string} budgetName Budget name
+     * @param {string} budgetName BudgetHelper name
      * @param {string} limitAmount budget pourcentage threshold
      * @returns {Promise<boolean>}
      */
@@ -74,7 +74,7 @@ module.exports = class Alerts {
     /**
      * Creates an alert
      * @async
-     * @param {string} budgetName Budget name
+     * @param {string} budgetName BudgetHelper name
      * @param {string} limitAmount budget pourcentage threshold
      * @param {string[]} subscribers list of emails that will be subscribed to the alert
      * @returns {Promise<null>}

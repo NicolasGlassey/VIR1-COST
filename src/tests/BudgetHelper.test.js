@@ -1,5 +1,5 @@
 /**
- * @File budget.test.js
+ * @File BudgetHelper.test.js
  * @brief Test the budget module
  * @author Theo.gauier@cpnv.ch
  * @version 15.05.2022

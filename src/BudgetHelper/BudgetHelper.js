@@ -16,9 +16,8 @@ const ExceptionHandler = require("../ExceptionHandler/ExceptionHandler.js");
 
 
 /**
- * Budget Helper
- * @class BudgetHelper
- * @type {BudgetHelper}
+ * BudgetHelper Helper
+ * @typedef {Object} BudgetHelper
  */
 module.exports = class BudgetHelper{
 
@@ -53,7 +52,7 @@ module.exports = class BudgetHelper{
     /**
      * Check if budget exists
      * @async
-     * @param {string} name Budget name
+     * @param {string} name BudgetHelper name
      * @returns {Promise<boolean>}
      */
     async exists(name) {
@@ -108,7 +107,7 @@ module.exports = class BudgetHelper{
     /**
      * Used to delete a budget
      * @async
-     * @param {string} name Budget's name
+     * @param {string} name BudgetHelper's name
      * @returns {Promise<boolean>}
      * @exeption NotFoundException is thrown if the budget doesn't exist 
      */

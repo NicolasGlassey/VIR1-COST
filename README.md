@@ -37,7 +37,7 @@ Before you clone this repository, [setup your AWS credentials](https://docs.aws.
 ## Usage
 ### Budget
 ```javascript
-const Budget = require("Budget/BudgetHelper.js");
+const Budget = require("BudgetHelper/BudgetHelper.js");
 budget = new Budget("[ACCOUNT_ID]");
 
 //create a new budget
