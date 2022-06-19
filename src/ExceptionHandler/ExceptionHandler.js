@@ -33,7 +33,7 @@ module.exports = class ExceptionHandler {
             case exception instanceof AwsInvalidParameterException:
                 throw new InvalidParameterException(exception.message);
             case exception instanceof AwsNotFoundException:
-                throw new NotFoundException();
+                throw new NotFoundException(exception.message);
             default:
                 throw new InternalErrorException("Undefined internal error");
         }

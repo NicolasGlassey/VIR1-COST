@@ -9,6 +9,8 @@
 const Alert = require("../Alert/Alert.js");
 const BudgetHelper = require("../Budget/BudgetHelper.js");
 
+const NotFoundException = require("../ExceptionHandler/exceptions/NotFoundException.js")
+
 let accountId = "709024702237";
 let region = "eu-west-3"
 let alert = null;
@@ -52,12 +54,14 @@ test("exists_BudgetNotFound_ThrowException", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
     //when
+    await expect(alert.exists(budgetName, percentage)).rejects.toThrow(NotFoundException);
     //then
-    try {
-        await alert.exists(budgetName, percentage)
-    } catch (error) {
-        expect(true).toBe(true);
-    }
+
+
+
+
+
+
 });
 test("create_NominalCase_Success", async () => {
     //given
@@ -72,13 +76,10 @@ test("create_NominalCase_Success", async () => {
 test("create_Duplicate_ThrowException", async () => {
     //given
     //when
-    await alert.create(budgetName, percentage,subscribers);
     //then
-    try {
-        await alert.create(budgetName, percentage,subscribers)
-    } catch (error) {
-        expect(true).toBe(true);
-    }
+
+    await expect(alert.create(budgetName, percentage,subscribers)).rejects.toThrow(NotFoundException);
+
 });
 test("create_BudgetNotFound_ThrowException", async () => {
     //given

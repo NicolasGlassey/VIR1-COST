@@ -11,7 +11,7 @@ const {
     DescribeNotificationsForBudgetCommand
 } = require("@aws-sdk/client-budgets");
 
-const AccessDeniedException = require("../ExceptionHandler/exceptions/AccessDeniedException.js")
+const ExceptionHandler = require("../ExceptionHandler/ExceptionHandler.js");
 
 /**
  * @typedef {Object} Alerts
@@ -34,6 +34,8 @@ module.exports = class Alerts {
      */
     #accountId = null;
 
+    #exceptionHandler = null;
+
     /** 
      * @constructor
      * @param {string} accountId - The ID of the AWS account.
@@ -45,6 +47,8 @@ module.exports = class Alerts {
         this.#client = new BudgetsClient({
             region: region
         });
+
+        this.#exceptionHandler = new ExceptionHandler();
     }
     /**
      * Check if alert exists
@@ -63,7 +67,7 @@ module.exports = class Alerts {
             const res = await this.#client.send(command);
             return await res.Notifications.some(notification => notification.Threshold == limitAmount);
         } catch (error) {
-            throw new Error(error.message);
+            this.#exceptionHandler.handle(error);
         }
     }
     /**
@@ -97,7 +101,7 @@ module.exports = class Alerts {
         try {
             await this.#client.send(command);
         } catch (error) {
-            throw new Error(error.message);
+            this.#exceptionHandler.handle(error);
         }
     }
 }

@@ -122,11 +122,7 @@ module.exports = class BudgetHelper{
             await this.#client.send(command);
             return true;
         }catch (exception){
-            if(exception instanceof AwsNotFoundException){
-                return false;
-            }else {
-                this.#exceptionHandler.handle(exception);
-            }
+            this.#exceptionHandler.handle(exception);
         }
     }
 
