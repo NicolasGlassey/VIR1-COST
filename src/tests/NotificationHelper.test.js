@@ -1,18 +1,18 @@
 /**
- * @File alert.test.js
- * @breif Test the alert module
+ * @File notificationHelper.test.js
+ * @breif Test the notificationHelper module
  * @author Mauro-Alexandre.Costa-dos-Santos@cpnv.ch
  * @version 18.06.2022
  */
 "use strict";
-const Alert = require("../Alert/Alert.js");
-const BudgetHelper = require("../Budget/BudgetHelper.js");
+const NotificationHelper = require("../NotificationHelper/NotificationHelper.js");
+const BudgetHelper = require("../BudgetHelper/BudgetHelper.js");
 const DuplicateRecordException = require("../ExceptionHandler/exceptions/DuplicateRecordException.js");
 const NotFoundException = require("../ExceptionHandler/exceptions/NotFoundException.js")
 
 let accountId = "709024702237";
 let region = "eu-west-3"
-let alert = null;
+let notificationHelper = null;
 let budgetName = "";
 let percentage = 0;
 let subscribers = [];
@@ -22,7 +22,7 @@ beforeEach(async () => {
     budgetName = "Cost-Test";
     budgetHelper = new BudgetHelper("709024702237");
     await budgetHelper.create(budgetName, 1, "USD", "DAILY");
-    alert = new Alert(accountId, region);
+    notificationHelper = new NotificationHelper(accountId, region);
     percentage = 80;
     subscribers = ["testEmail@test.xyz","testEmail2@test.xyz"]
 });
@@ -40,43 +40,43 @@ test("exists_NominalCase_Success", async () => {
     budgetName = "SaaS-CPNV";
     //when
     //then 
-    expect(await alert.exists(budgetName, percentage)).toBe(true);
+    expect(await notificationHelper.exists(budgetName, percentage)).toBe(true);
 });
 test("exists_DoesNotExist_Success", async () => {
     //given
     percentage = 20
     //when
     //then
-    expect(await alert.exists(budgetName, percentage)).toBe(false);
+    expect(await notificationHelper.exists(budgetName, percentage)).toBe(false);
 });
 test("exists_BudgetNotFound_Success", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
     //when
     //then
-    expect(await alert.exists(budgetName, percentage)).toBe(false);
+    expect(await notificationHelper.exists(budgetName, percentage)).toBe(false);
 });
 test("create_NominalCase_Success", async () => {
     //given
-    const test1 = await alert.exists(budgetName, percentage);
+    const test1 = await notificationHelper.exists(budgetName, percentage);
     //when
-    await alert.create(budgetName, percentage,subscribers);
+    await notificationHelper.create(budgetName, percentage,subscribers);
     //then
-    const test2 = await alert.exists(budgetName, percentage);
+    const test2 = await notificationHelper.exists(budgetName, percentage);
     expect(test1).toBe(false);
     expect(test2).toBe(true);
 });
 test("create_Duplicate_ThrowException", async () => {
     //given
     //when
-    await alert.create(budgetName, percentage,subscribers);
+    await notificationHelper.create(budgetName, percentage,subscribers);
     //then
-    await expect(alert.create(budgetName, percentage,subscribers)).rejects.toThrow(DuplicateRecordException);
+    await expect(notificationHelper.create(budgetName, percentage,subscribers)).rejects.toThrow(DuplicateRecordException);
 });
 test("create_BudgetNotFound_ThrowException", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
     //when
     //then
-    await expect(alert.create(budgetName, percentage,subscribers)).rejects.toThrow(NotFoundException);
+    await expect(notificationHelper.create(budgetName, percentage,subscribers)).rejects.toThrow(NotFoundException);
 });

@@ -6,7 +6,7 @@
  */
 "use strict";
 
-const BudgetHelper = require("../Budget/BudgetHelper.js");
+const BudgetHelper = require("../BudgetHelper/BudgetHelper.js");
 const DuplicateRecordException = require("../ExceptionHandler/exceptions/DuplicateRecordException.js");
 const NotFoundException = require("../ExceptionHandler/exceptions/NotFoundException.js")
 
