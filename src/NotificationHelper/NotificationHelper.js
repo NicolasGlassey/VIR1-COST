@@ -26,7 +26,11 @@ module.exports = class NotificationHelper {
      * @private
      */
     #client = null;
-
+    /**
+     * The class used to manage aws budgets
+     * @type {BudgetHelper}
+     * @private
+     */
     #budgetHelper = null;
 
     /**
@@ -36,6 +40,11 @@ module.exports = class NotificationHelper {
      */
     #accountId = null;
 
+    /**
+     * exception Handler for exceptions sent by the aws api
+     * @type {ExceptionHandler}
+     * @private
+     */
     #exceptionHandler = null;
 
 

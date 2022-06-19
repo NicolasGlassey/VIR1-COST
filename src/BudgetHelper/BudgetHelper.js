@@ -35,6 +35,11 @@ module.exports = class BudgetHelper{
      */
     #accountId = null;
 
+    /**
+     * exception Handler for exceptions sent by the aws api
+     * @type {ExceptionHandler}
+     * @private
+     */
     #exceptionHandler = null;
 
     /** 
