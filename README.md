@@ -1,6 +1,6 @@
 # VIR1-COST
 ## About the project
-VIR1-Costs is a set of classes to create and manage costs objects using the AWS SDK.
+VIR1-COST is a set of classes to create and manage costs objects using the AWS SDK.
 
 ### Built With
 
