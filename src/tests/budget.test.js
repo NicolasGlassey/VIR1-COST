@@ -7,8 +7,8 @@
 "use strict";
 
 const BudgetHelper = require("../Budget/BudgetHelper.js");
-const DuplicateRecordException = require("../Budget/DuplicateRecordException.js");
-const NotFoundException = require("../Budget/NotFoundException.js")
+const DuplicateRecordException = require("../Budget/exceptions/DuplicateRecordException.js");
+const NotFoundException = require("../Budget/exceptions/NotFoundException.js")
 
 let budgetHelper = null;
 let budgetName = "";
