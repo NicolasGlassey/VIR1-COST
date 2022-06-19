@@ -26,16 +26,32 @@ const NotFoundException = require("./NotFoundException.js")
 
 
 /**
- * @typedef {Object} Budget
- * @attribute {string} name
- *
- *
+ * Budget Helper
+ * @class BudgetHelper
+ * @type {BudgetHelper}
  */
 module.exports = class BudgetHelper{
 
+    /**
+     * The aws client used to communicate with the aws api
+     * @type {BudgetsClient}
+     * @private
+     */
     #client = null;
+
+    /**
+     * The account id needed to fetch budget information.
+     * @type {string}
+     * @private
+     */
     #accountId = null;
 
+    /** 
+     * @constructor
+     * @param {string} accountId - The ID of the AWS account.
+     * @param {string} region - The AWS region to connect to.
+     * 
+     */
     constructor(accountId, region) {
         this.#accountId = accountId;
         this.#client = new BudgetsClient({region: region});
@@ -43,6 +59,7 @@ module.exports = class BudgetHelper{
 
     /**
      * Check if budget exists
+     * @async
      * @param name Budget name
      * @returns {Promise<boolean>}
      */
@@ -66,11 +83,12 @@ module.exports = class BudgetHelper{
 
     /**
      * Used to create a budget
-     * @param accountId - The ID of the AWS account.
-     * @param name - The name of the budget, should be unique.
-     * @param limitAmount - The budget limit.
-     * @param limitUnit - The currency code, "USD" for exemple.
-     * @param timeUnit - The budget period. DAILY, MONTHLY, QUARTERLY, or ANNUALLY.
+     * @async
+     * @param {string} accountId - The ID of the AWS account.
+     * @param {string} name - The name of the budget, should be unique.
+     * @param {string} limitAmount - The budget limit.
+     * @param {string} limitUnit - The currency code, "USD" for exemple.
+     * @param {int} timeUnit - The budget period. DAILY, MONTHLY, QUARTERLY, or ANNUALLY.
      * @returns {Promise<boolean>}
      */
     async create(name, limitAmount, limitUnit, timeUnit) {
@@ -97,8 +115,10 @@ module.exports = class BudgetHelper{
 
     /**
      * Used to delete a budget
-     * @param name Budget's name
+     * @async
+     * @param {string} name Budget's name
      * @returns {Promise<boolean>}
+     * @exeption NotFoundException is thrown if the budget doesn't exist 
      */
     async delete(name){
         let command = new DeleteBudgetCommand({
@@ -121,6 +141,7 @@ module.exports = class BudgetHelper{
     /**
      * To convert amazon exceptions to our exceptions
      * @param exception
+     * @private
      */
     #exceptionHandler(exception) {
         switch (true){
