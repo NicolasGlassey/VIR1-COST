@@ -5,10 +5,9 @@
  * @version 18.06.2022
  */
 "use strict";
-
 const Alert = require("../Alert/Alert.js");
 const BudgetHelper = require("../Budget/BudgetHelper.js");
-
+const DuplicateRecordException = require("../ExceptionHandler/exceptions/DuplicateRecordException.js");
 const NotFoundException = require("../ExceptionHandler/exceptions/NotFoundException.js")
 
 let accountId = "709024702237";
@@ -50,18 +49,12 @@ test("exists_DoesNotExist_Success", async () => {
     //then
     expect(await alert.exists(budgetName, percentage)).toBe(false);
 });
-test("exists_BudgetNotFound_ThrowException", async () => {
+test("exists_BudgetNotFound_Success", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
     //when
-    await expect(alert.exists(budgetName, percentage)).rejects.toThrow(NotFoundException);
     //then
-
-
-
-
-
-
+    expect(await alert.exists(budgetName, percentage)).toBe(false);
 });
 test("create_NominalCase_Success", async () => {
     //given
@@ -76,19 +69,14 @@ test("create_NominalCase_Success", async () => {
 test("create_Duplicate_ThrowException", async () => {
     //given
     //when
+    await alert.create(budgetName, percentage,subscribers);
     //then
-
-    await expect(alert.create(budgetName, percentage,subscribers)).rejects.toThrow(NotFoundException);
-
+    await expect(alert.create(budgetName, percentage,subscribers)).rejects.toThrow(DuplicateRecordException);
 });
 test("create_BudgetNotFound_ThrowException", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
     //when
     //then
-    try {
-        await alert.create(budgetName, percentage,subscribers)
-    } catch (error) {
-        expect(true).toBe(true);
-    }
+    await expect(alert.create(budgetName, percentage,subscribers)).rejects.toThrow(NotFoundException);
 });

@@ -10,7 +10,7 @@ const {
     CreateNotificationCommand,
     DescribeNotificationsForBudgetCommand
 } = require("@aws-sdk/client-budgets");
-
+const BudgetHelper = require ("../Budget/BudgetHelper.js");
 const ExceptionHandler = require("../ExceptionHandler/ExceptionHandler.js");
 
 /**
@@ -62,7 +62,8 @@ module.exports = class Alerts {
             AccountId: this.#accountId,
             BudgetName: budgetName
         });
-
+        let budgetHelper = new BudgetHelper(this.#accountId);
+        if(! await budgetHelper.exists(budgetName))return false;
         try {
             const res = await this.#client.send(command);
             return await res.Notifications.some(notification => notification.Threshold == limitAmount);
@@ -100,6 +101,7 @@ module.exports = class Alerts {
         let command = new CreateNotificationCommand(input);
         try {
             await this.#client.send(command);
+            return true;
         } catch (error) {
             this.#exceptionHandler.handle(error);
         }
