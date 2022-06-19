@@ -58,12 +58,12 @@ test("create_AlreadyExist_ThrowException", async () => {
     await budgetHelper.create(budgetName, 1, "USD", "DAILY")
 
     //when
-
-    await expect(budgetHelper.create(budgetName, 1, "USD", "DAILY")).rejects.toThrow(DuplicateRecordException);
+    //event is called directly by the assertion
 
 
     //then
     //Exception is thrown
+    await expect(budgetHelper.create(budgetName, 1, "USD", "DAILY")).rejects.toThrow(DuplicateRecordException);
 });
 
 test("delete_NominalCase_Success", async () => {
@@ -86,10 +86,11 @@ test("delete_BudgetNotFound_ThrowException", async () => {
     budgetName += "NotExist";
 
     //when
-    await expect(budgetHelper.delete(budgetName, 1, "USD", "DAILY")).rejects.toThrow(NotFoundException);
+    //event is called directly by the assertion
 
     //then
     //Exception is thrown
+    await expect(budgetHelper.delete(budgetName, 1, "USD", "DAILY")).rejects.toThrow(NotFoundException);
 });
 
 afterEach(async ()=>{
