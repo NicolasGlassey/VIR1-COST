@@ -86,7 +86,7 @@ test("delete_BudgetNotFound_ThrowException", async () => {
     budgetName += "NotExist";
 
     //when
-    await expect(budgetHelper.delete(budgetName, 1, "USD", "DAILY")).rejects.toThrow(Error);
+    await expect(budgetHelper.delete(budgetName, 1, "USD", "DAILY")).rejects.toThrow(NotFoundException);
 
     //then
     //Exception is thrown
