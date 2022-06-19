@@ -60,7 +60,7 @@ module.exports = class BudgetHelper{
     /**
      * Check if budget exists
      * @async
-     * @param name Budget name
+     * @param {string} name Budget name
      * @returns {Promise<boolean>}
      */
     async exists(name) {
@@ -84,7 +84,6 @@ module.exports = class BudgetHelper{
     /**
      * Used to create a budget
      * @async
-     * @param {string} accountId - The ID of the AWS account.
      * @param {string} name - The name of the budget, should be unique.
      * @param {string} limitAmount - The budget limit.
      * @param {string} limitUnit - The currency code, "USD" for exemple.
