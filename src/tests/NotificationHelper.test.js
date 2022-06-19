@@ -77,6 +77,8 @@ test("create_BudgetNotFound_ThrowException", async () => {
     //given
     budgetName = "asdjzagsdiunqwediudagdaoihenowda";
     //when
+    //event is called directly by the assertion
+
     //then
     await expect(notificationHelper.create(budgetName, percentage,subscribers)).rejects.toThrow(NotFoundException);
 });
