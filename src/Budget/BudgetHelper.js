@@ -17,12 +17,12 @@ const { BudgetsClient,
         NotFoundException: AwsNotFoundException
         } = require("@aws-sdk/client-budgets");
 
-const AccessDeniedException = require("./exceptions/AccessDeniedException.js")
-const CreationLimitExceededException = require("./exceptions/CreationLimitExceededException.js")
-const DuplicateRecordException = require("./exceptions/DuplicateRecordException.js")
-const InternalErrorException = require("./exceptions/InternalErrorException.js")
-const InvalidParameterException = require("./exceptions/InvalidParameterException.js")
-const NotFoundException = require("./exceptions/NotFoundException.js")
+const AccessDeniedException = require("../exceptions/AccessDeniedException.js")
+const CreationLimitExceededException = require("../exceptions/CreationLimitExceededException.js")
+const DuplicateRecordException = require("../exceptions/DuplicateRecordException.js")
+const InternalErrorException = require("../exceptions/InternalErrorException.js")
+const InvalidParameterException = require("../exceptions/InvalidParameterException.js")
+const NotFoundException = require("../exceptions/NotFoundException.js")
 
 
 /**
