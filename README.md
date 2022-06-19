@@ -51,7 +51,7 @@ budget.delete("myBudget");
 ```
 ### NotificationHelper
 ```javascript
-const NotificationHelper = require("Notification/NotificationHelper.js");
+const NotificationHelper = require("NotificationHelper/NotificationHelper.js");
 notificationHelper = new NotificationHelper("[ACCOUNT_ID]","[region]");
 
 //check if notification exists
