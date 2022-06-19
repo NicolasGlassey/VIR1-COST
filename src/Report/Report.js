@@ -1,28 +1,24 @@
 const {
-  CostAndUsageReportServiceClient,
-  PutReportDefinitionCommand
-} = require("@aws-sdk/client-cost-and-usage-report-service");
+  CostExplorerClient,
+  GetCostAndUsageCommand
+} = require("@aws-sdk/client-cost-explorer");
 
 module.exports = class CostReport {
   static async createAWSCostReport(){
-    
-    const client = new CostAndUsageReportServiceClient({region: "us-east-1"});
+    let dateEnd = new Date();
+    let dateStart = new Date();
+    dateStart.setMonth(dateEnd.getMonth()-1);
+
+    const client = new CostExplorerClient({region: "eu-west-3"});
     try {
-      const command = new PutReportDefinitionCommand({
-        ReportDefinition: {
-          ReportName: "AWS_Cost_Report",
-          TimeUnit: "DAILY",
-          Compression: "GZIP",
-          S3Bucket: "vir1.budget.diduno.education",
-          S3Prefix: "",
-          S3Region: "eu-west-3",
-          AdditionalSchemaElements: [
-            "RESOURCES",
-          ],
-          ReportVersioning: "CREATE_NEW_REPORT",
-          Format: "textORcsv",
-          ReportDefinition:"reptDefinition"
-        },
+      const command = new GetCostAndUsageCommand({
+        TimePeriod:[{
+          Start: dateStart.toLocaleDateString(),
+          End: dateEnd.toLocaleDateString()
+        }],
+        Granularity: "DAILY",
+        Metrics: ["BlendedCost","UsageQuantity"]
+
       });
       const data = await client.send(command).then(
         (data) =>{
