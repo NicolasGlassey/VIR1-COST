@@ -43,4 +43,6 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-None. This is a school projet, it can't be licensed.
+MIT.
+
+We do not take any responsability on the usage of the project.
